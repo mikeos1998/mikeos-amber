@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+S=/usr/share/sounds/mikeos-amber
+for f in /usr/share/sounds/Oxygen-*.ogg; do
+    [ -e "$f" ] || continue
+    case "$(basename "$f")" in
+        *Log-In*)   src=startup ;;
+        *Log-Out*)  src=shutdown ;;
+        *Error*|*Critical*|*Cant*|*Problem*|*Lost*|*Negative*) src=error ;;
+        *Warning*)  src=warning ;;
+        *Question*) src=question ;;
+        *Trash*)    src=trash ;;
+        *Window*|*List*|*Move*) src=click ;;
+        *)          src=notify ;;
+    esac
+    cp "$S/$src.ogg" "$f"
+done
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -f /usr/share/icons/hicolor || true
+fi

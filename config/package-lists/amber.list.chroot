@@ -1,0 +1,29 @@
+# --- Desktop: KDE Plasma 5 (X11) ---
+kde-plasma-desktop
+kwin-x11
+xserver-xorg
+plasma-nm
+plasma-pa
+pipewire-audio
+oxygen-icon-theme
+oxygen-sounds
+
+# --- Apps ---
+kcalc
+dolphin
+vlc
+vlc-plugin-fluidsynth
+fluid-soundfont-gm
+
+# --- System ---
+sudo
+locales
+network-manager
+
+# --- Hardware firmware (Wi-Fi, graphics, sound on real PCs) ---
+firmware-linux
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+firmware-brcm80211
+firmware-sof-signed

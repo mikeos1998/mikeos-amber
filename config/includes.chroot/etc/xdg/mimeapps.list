@@ -1,0 +1,3 @@
+[Default Applications]
+audio/midi=vlc.desktop
+audio/x-midi=vlc.desktop

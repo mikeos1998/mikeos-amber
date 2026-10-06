@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Mike OS: Amber startup sound
+Exec=pw-play /usr/share/sounds/mikeos-amber/startup.wav
+OnlyShowIn=KDE;
+NoDisplay=true

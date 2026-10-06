@@ -1,0 +1,7 @@
+PRETTY_NAME="Mike OS: Amber"
+NAME="Mike OS"
+VERSION_ID="1"
+VERSION="1 (Amber)"
+VERSION_CODENAME=bookworm
+ID=debian
+LOGO=mikeos-amber

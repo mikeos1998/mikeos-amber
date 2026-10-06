@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [ { "Name": "Mike OS" } ],
+        "Description": "Mike OS: Amber - retro orange desktop, forked from Reactionary by phob1an",
+        "Id": "org.mikeos.amber",
+        "License": "GPL-3.0",
+        "Name": "Mike OS: Amber",
+        "ServiceTypes": [ "Plasma/LookAndFeel" ],
+        "Version": "1.0"
+    },
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "X-Plasma-MainScript": "defaults"
+}
