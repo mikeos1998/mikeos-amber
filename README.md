@@ -1,6 +1,6 @@
 # Mike OS: Amber
 
-A retro, orange-themed Linux desktop built on Debian 12 and KDE Plasma, as a bootable live ISO for regular (x86, 64-bit) PCs.
+A retro, orange-and-purple Linux desktop built on Debian 12 and KDE Plasma, as a bootable live ISO for regular (x86, 64-bit) PCs.
 
 ## Build it
 
@@ -17,7 +17,8 @@ The live user is `amber`, password `live`. Nothing is written to the PC's drive.
 |---|---|
 | Apps to install | `config/package-lists/amber.list.chroot` |
 | Build settings (time zone, user name, keyboard) | `auto/config` |
-| Colors | `config/includes.chroot/usr/share/color-schemes/Amber.colors` and `config/includes.chroot/etc/skel/.config/kdeglobals` |
+| Colors | `config/includes.chroot/usr/share/color-schemes/Amber.colors` |
+| Browser start / new tab page | `config/includes.chroot/usr/share/mikeos-amber/newtab/index.html` |
 | Taskbar layout and wallpaper choice | `config/includes.chroot/usr/share/plasma/look-and-feel/org.mikeos.amber/contents/layouts/` |
 | Logo | `config/includes.chroot/usr/share/pixmaps/mikeos-amber.svg` |
 | Wallpaper | `config/includes.chroot/usr/share/wallpapers/MikeOS-Amber/` |

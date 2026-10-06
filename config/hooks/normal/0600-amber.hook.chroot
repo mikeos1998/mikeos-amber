@@ -34,6 +34,14 @@ Autolock=false
 LockOnResume=false
 CFG
 
+# --- browser: make every new tab the Amber search page
+F=/usr/share/mikeos-amber/firefox
+if [ -d /usr/lib/firefox-esr ]; then
+    mkdir -p /usr/lib/firefox-esr/defaults/pref
+    cat "$F/autoconfig.js" > /usr/lib/firefox-esr/defaults/pref/autoconfig.js
+    cat "$F/mikeos-amber.cfg" > /usr/lib/firefox-esr/mikeos-amber.cfg
+fi
+
 # --- swap every stock system sound for an 8-bit one
 S=/usr/share/sounds/mikeos-amber
 for f in /usr/share/sounds/Oxygen-*.ogg; do

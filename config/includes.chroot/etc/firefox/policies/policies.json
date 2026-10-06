@@ -1,0 +1,12 @@
+{
+  "policies": {
+    "Homepage": {
+      "URL": "file:///usr/share/mikeos-amber/newtab/index.html",
+      "StartPage": "homepage"
+    },
+    "OverrideFirstRunPage": "",
+    "OverridePostUpdatePage": "",
+    "DontCheckDefaultBrowser": true,
+    "SearchEngines": { "Default": "Google" }
+  }
+}

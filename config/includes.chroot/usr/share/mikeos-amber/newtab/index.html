@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>New Tab</title>
+<link rel="icon" href="logo.svg">
+<style>
+  html { background: #f08a00 radial-gradient(circle at 50% 42%, #ffc247 0%, #f08a00 45%, #b44a00 100%) no-repeat fixed; }
+  body {
+    min-height: 100vh; margin: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: "DejaVu Sans", "Noto Sans", sans-serif; color: #1f1a1a;
+  }
+  img { width: 180px; height: 180px; }
+  h1 { margin: 8px 0 28px; font-size: 34px; letter-spacing: 3px; }
+  form { display: flex; gap: 8px; width: min(620px, 86vw); }
+  input, button {
+    font: inherit; font-size: 17px; padding: 9px 12px; border: 2px solid;
+  }
+  input {
+    flex: 1; min-width: 0; background: #fff; color: #1c0a2e;
+    border-color: #3f2050 #f3e8ff #f3e8ff #3f2050;       /* sunken, classic style */
+  }
+  input:focus { outline: 2px solid #7a12c4; outline-offset: 1px; }
+  button {
+    background: #8b00db; color: #fff; font-weight: bold; cursor: pointer;
+    border-color: #d6a2f4 #3f2050 #3f2050 #d6a2f4;       /* raised, classic style */
+  }
+  button:active { border-color: #3f2050 #d6a2f4 #d6a2f4 #3f2050; }
+</style>
+</head>
+<body>
+  <img src="logo.svg" alt="">
+  <h1>MIKE OS: AMBER</h1>
+  <form action="https://www.google.com/search" method="get">
+    <input type="text" name="q" placeholder="Search Google" autofocus autocomplete="off" aria-label="Search Google">
+    <button type="submit">Search</button>
+  </form>
+</body>
+</html>

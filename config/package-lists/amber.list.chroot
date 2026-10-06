@@ -14,6 +14,11 @@ dolphin
 vlc
 vlc-plugin-fluidsynth
 fluid-soundfont-gm
+firefox-esr
+ksnakeduel
+# needed by Space Cadet Pinball (built in config/hooks/normal/0700-pinball.hook.chroot)
+libsdl2-2.0-0
+libsdl2-mixer-2.0-0
 
 # --- System ---
 sudo

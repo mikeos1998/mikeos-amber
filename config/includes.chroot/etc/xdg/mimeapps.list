@@ -1,3 +1,6 @@
 [Default Applications]
 audio/midi=vlc.desktop
 audio/x-midi=vlc.desktop
+text/html=firefox-esr.desktop
+x-scheme-handler/http=firefox-esr.desktop
+x-scheme-handler/https=firefox-esr.desktop

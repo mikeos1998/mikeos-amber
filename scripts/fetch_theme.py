@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch the Reactionary theme (GPLv3, by phob1an), recolor blue -> amber,
+"""Fetch the Reactionary theme (GPLv3, by phob1an), recolor it purple,
 and install it into the image as the "Amber" Plasma theme + window decoration."""
 import colorsys, gzip, json, os, re, shutil, subprocess, sys, tarfile, zipfile
 
@@ -8,7 +8,7 @@ REF = os.environ.get("REACTIONARY_REF", "")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INC = os.path.join(ROOT, "config/includes.chroot")
 WORK = os.path.join(ROOT, ".cache/reactionary")
-AMBER_HUE = 34 / 360.0
+PURPLE_HUE = 278 / 360.0
 
 
 def die(msg, tree=None):
@@ -24,13 +24,18 @@ def die(msg, tree=None):
 
 # ---------------------------------------------------------------- recolor
 def shift(r, g, b):
-    """Blue/teal shades become the matching shade of amber; everything else is kept."""
+    """Blue/teal shades become purple, greys become purple-tinted; everything else is kept."""
     h, l, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
-    if not (0.5 <= h <= 0.78 and s >= 0.25 and 0.05 <= l <= 0.95):
+    if max(r, g, b) - min(r, g, b) <= 30:                 # a grey (panel, menu, borders)
+        if not 0.12 <= l <= 0.93:
+            return None                                   # keep black text and white highlights
+        r, g, b = colorsys.hls_to_rgb(PURPLE_HUE, l - 0.03, 0.35 + 0.3 * l)
+    elif 0.5 <= h <= 0.78 and s >= 0.25 and 0.05 <= l <= 0.95:
+        if l < 0.5:
+            l = 0.36 + 0.28 * l
+        r, g, b = colorsys.hls_to_rgb(PURPLE_HUE, l, min(1.0, s * 1.1))
+    else:
         return None
-    if l < 0.5:
-        l = 0.36 + 0.28 * l
-    r, g, b = colorsys.hls_to_rgb(AMBER_HUE, l, min(1.0, s * 1.1))
     return round(r * 255), round(g * 255), round(b * 255)
 
 
@@ -67,7 +72,8 @@ def recolor_text(text):
 
 def recolor_tree(top):
     total = 0
-    for base, _, files in os.walk(top):
+    for base, dirs, files in os.walk(top):
+        dirs[:] = [d for d in dirs if d != "icons"]       # leave the small tray icons alone
         for name in files:
             path = os.path.join(base, name)
             if name.endswith(".svgz"):

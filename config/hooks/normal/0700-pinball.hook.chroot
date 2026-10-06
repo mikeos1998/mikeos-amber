@@ -1,0 +1,63 @@
+#!/bin/sh
+# Space Cadet Pinball: the same engine source and game data that the Flathub app uses,
+# built natively so it works offline from the live USB.
+# If anything here fails, the ISO still builds - just without pinball.
+
+install_pinball() {
+    set -e
+    COMMIT=cb9b7b886244a27773f66b0b19fdc2998392565e
+    DATA_URL=https://archive.org/download/pinball_202007/Pinball.zip
+    DATA_SHA=1078b6ec75a36b5585061d1ebdd3f27019d97c1ab7c5a4bb9f1159932aae3109
+    BUILD_DEPS="git cmake make g++ libsdl2-dev libsdl2-mixer-dev"
+    W=/tmp/pinball-build
+    D=/opt/SpaceCadetPinball
+
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends $BUILD_DEPS wget unzip ca-certificates
+
+    rm -rf "$W" && mkdir -p "$W" && cd "$W"
+    git clone https://github.com/k4zmu2a/SpaceCadetPinball src
+    git -C src checkout "$COMMIT"
+    cmake -S src -B build -DCMAKE_BUILD_TYPE=Release
+    cmake --build build -j"$(nproc)"
+
+    wget -O pinball.zip "$DATA_URL"
+    echo "$DATA_SHA  pinball.zip" | sha256sum -c -
+    unzip -q pinball.zip -d data
+
+    BIN=$(find src/bin build -type f -name SpaceCadetPinball -perm -u+x | head -n 1)
+    [ -n "$BIN" ]
+    DAT=$(find data -iname 'pinball.dat' | head -n 1)
+    [ -n "$DAT" ]
+
+    rm -rf "$D" && mkdir -p "$D"
+    cp -r "$(dirname "$DAT")"/. "$D"/
+    install -m755 "$BIN" "$D/SpaceCadetPinball"
+    install -Dm644 src/SpaceCadetPinball/Icon_192x192.png /usr/share/pixmaps/SpaceCadetPinball.png
+    install -Dm644 src/LICENSE /usr/share/doc/mikeos-amber/LICENSE.SpaceCadetPinball
+
+    cat > /usr/share/applications/SpaceCadetPinball.desktop <<'DESKTOP'
+[Desktop Entry]
+Type=Application
+Name=Space Cadet Pinball
+Comment=3D Pinball - Space Cadet
+Exec=/opt/SpaceCadetPinball/SpaceCadetPinball
+Path=/opt/SpaceCadetPinball
+Icon=SpaceCadetPinball
+Categories=Game;ArcadeGame;
+DESKTOP
+
+    cd /
+    rm -rf "$W"
+    apt-get purge -y --autoremove $BUILD_DEPS
+    apt-get clean
+}
+
+if ( install_pinball ); then
+    echo "PINBALL: installed"
+else
+    echo "PINBALL: *** FAILED - the ISO will be built without Space Cadet Pinball ***"
+    rm -rf /tmp/pinball-build
+fi
+exit 0
