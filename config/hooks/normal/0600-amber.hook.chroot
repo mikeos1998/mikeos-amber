@@ -1,5 +1,40 @@
 #!/bin/sh
 set -e
+
+# --- default desktop settings for every new user (Amber theme, colors, splash)
+C=/etc/skel/.config
+mkdir -p "$C"
+
+sed -e '/^\[KDE\]$/a LookAndFeelPackage=org.mikeos.amber\nwidgetStyle=Windows' \
+    /usr/share/color-schemes/Amber.colors > "$C/kdeglobals"
+printf '\n[Icons]\nTheme=oxygen\n' >> "$C/kdeglobals"
+
+cat > "$C/kwinrc" <<'CFG'
+[org.kde.kdecoration2]
+ButtonsOnLeft=M
+ButtonsOnRight=IAX
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__Amber
+CFG
+
+cat > "$C/plasmarc" <<'CFG'
+[Theme]
+name=Amber
+CFG
+
+cat > "$C/ksplashrc" <<'CFG'
+[KSplash]
+Engine=KSplashQML
+Theme=org.mikeos.amber
+CFG
+
+cat > "$C/kscreenlockerrc" <<'CFG'
+[Daemon]
+Autolock=false
+LockOnResume=false
+CFG
+
+# --- swap every stock system sound for an 8-bit one
 S=/usr/share/sounds/mikeos-amber
 for f in /usr/share/sounds/Oxygen-*.ogg; do
     [ -e "$f" ] || continue
