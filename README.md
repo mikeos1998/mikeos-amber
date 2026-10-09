@@ -18,6 +18,9 @@ The live user is `amber`, password `live`. Nothing is written to the PC's drive.
 | Apps to install | `config/package-lists/amber.list.chroot` |
 | Build settings (time zone, user name, keyboard) | `auto/config` |
 | Colors | `config/includes.chroot/usr/share/color-schemes/Amber.colors` |
+| Snake and Welcome Center apps | `config/includes.chroot/usr/share/mikeos-amber/apps/` |
+| User picture, installer slides | `config/includes.chroot/usr/share/mikeos-amber/` |
+| Boot screen | `config/includes.chroot/usr/share/plymouth/themes/mikeos-amber/` |
 | Browser start / new tab page | `config/includes.chroot/usr/share/mikeos-amber/newtab/index.html` |
 | Taskbar layout and wallpaper choice | `config/includes.chroot/usr/share/plasma/look-and-feel/org.mikeos.amber/contents/layouts/` |
 | Logo | `config/includes.chroot/usr/share/pixmaps/mikeos-amber.svg` |

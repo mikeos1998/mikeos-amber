@@ -15,10 +15,33 @@ vlc
 vlc-plugin-fluidsynth
 fluid-soundfont-gm
 firefox-esr
-ksnakeduel
 # needed by Space Cadet Pinball (built in config/hooks/normal/0700-pinball.hook.chroot)
 libsdl2-2.0-0
 libsdl2-mixer-2.0-0
+
+# --- Bundled apps: office, paint, photos, PDF, archives, screenshots, system info ---
+libreoffice-writer
+libreoffice-calc
+libreoffice-impress
+libreoffice-kf5
+kolourpaint
+gwenview
+okular
+ark
+kde-spectacle
+kinfocenter
+
+# --- Games ---
+kpat
+kmines
+
+# --- Mike OS apps (Snake, Welcome Center) ---
+python3-pyqt5
+
+# --- Install to hard drive, boot screen ---
+calamares
+calamares-settings-debian
+plymouth
 
 # --- System ---
 sudo

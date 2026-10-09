@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Welcome Center
+Comment=Get started with Mike OS: Amber
+Exec=python3 /usr/share/mikeos-amber/apps/welcome.py
+Icon=mikeos-amber
+Categories=System;

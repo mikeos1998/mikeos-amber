@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Snake
+Comment=Classic snake, Mike OS style
+Exec=python3 /usr/share/mikeos-amber/apps/snake.py
+Icon=amber-snake
+Categories=Game;ArcadeGame;

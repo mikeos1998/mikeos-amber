@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Link
+Name=Trash
+URL=trash:/
+Icon=user-trash-full
+EmptyIcon=user-trash

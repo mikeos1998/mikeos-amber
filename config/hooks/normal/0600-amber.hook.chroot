@@ -32,7 +32,68 @@ cat > "$C/kscreenlockerrc" <<'CFG'
 [Daemon]
 Autolock=false
 LockOnResume=false
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/MikeOS-Amber/contents/images/1920x1080.png
 CFG
+
+# --- user picture: the logo on orange
+M=/usr/share/mikeos-amber
+cp "$M/user.png" /etc/skel/.face
+cp "$M/user.png" /etc/skel/.face.icon
+mkdir -p /var/lib/AccountsService/icons /var/lib/AccountsService/users
+cp "$M/user.png" /var/lib/AccountsService/icons/amber
+printf '[User]\nIcon=/var/lib/AccountsService/icons/amber\nSystemAccount=false\n' > /var/lib/AccountsService/users/amber
+
+# --- desktop shortcuts must be executable or Plasma refuses to run them
+chmod 755 /etc/skel/Desktop/*.desktop 2>/dev/null || true
+
+# --- login screen background
+for t in /usr/share/sddm/themes/*breeze*; do
+    [ -d "$t" ] || continue
+    printf '[General]\nbackground=/usr/share/wallpapers/MikeOS-Amber/contents/images/3840x2160.png\ntype=image\n' > "$t/theme.conf.user"
+done
+
+# --- installer: Mike OS name, logo, colors and slideshow (skipped quietly if anything is missing)
+brand_installer() {
+    B=/etc/calamares/branding/debian
+    D="$B/branding.desc"
+    [ -f "$D" ] || return 0
+    value() { sed -n "s/^ *$1: *\"\{0,1\}\([^\"]*\)\"\{0,1\} *\$/\1/p" "$D" | head -n 1; }
+    for key in productLogo productIcon; do
+        f=$(value $key); [ -n "$f" ] && [ -f "$B/$f" ] || continue
+        case "$f" in
+            *.svg) cp /usr/share/pixmaps/mikeos-amber.svg "$B/$f" ;;
+            *)     cp /usr/share/plymouth/themes/mikeos-amber/logo.png "$B/$f" ;;
+        esac
+    done
+    f=$(value productWelcome); [ -n "$f" ] && [ -f "$B/$f" ] && cp "$M/installer/slide1.png" "$B/$f"
+    sed -i \
+        -e 's/^\( *productName: *\).*/\1"Mike OS: Amber"/' \
+        -e 's/^\( *shortProductName: *\).*/\1"Mike OS"/' \
+        -e 's/^\( *version: *\).*/\1"1"/' \
+        -e 's/^\( *shortVersion: *\).*/\1"1"/' \
+        -e 's/^\( *versionedName: *\).*/\1"Mike OS: Amber"/' \
+        -e 's/^\( *shortVersionedName: *\).*/\1"Mike OS 1"/' \
+        -e 's/^\( *sidebarBackground: *\).*/\1"#3a1f5c"/' \
+        -e 's/^\( *sidebarText: *\).*/\1"#FFFFFF"/' \
+        -e 's/^\( *sidebarTextSelect: *\).*/\1"#1a0f00"/' \
+        -e 's/^\( *sidebarTextHighlight: *\).*/\1"#F08A00"/' \
+        -e 's/^\( *sidebarSelect: *\).*/\1"#F08A00"/' \
+        "$D"
+    show=$(value slideshow)
+    case "$show" in
+        *.qml) cp "$M"/installer/slide*.png "$B"/ && cp "$M/installer/show.qml" "$B/$show" ;;
+    esac
+    for f in /usr/share/applications/*.desktop; do
+        grep -q -E '^Exec=.*(calamares|install-debian)' "$f" || continue
+        sed -i -e '/^Name\[/d' -e '/^GenericName\[/d' -e '/^Comment\[/d' \
+               -e 's/^Name=.*/Name=Install Mike OS: Amber/' \
+               -e 's/^Comment=.*/Comment=Put Mike OS: Amber on this computer/' \
+               -e 's/^Icon=.*/Icon=mikeos-amber/' "$f"
+    done
+}
+brand_installer || echo "INSTALLER BRANDING: skipped after an error"
 
 # --- browser: make every new tab the Amber search page
 F=/usr/share/mikeos-amber/firefox

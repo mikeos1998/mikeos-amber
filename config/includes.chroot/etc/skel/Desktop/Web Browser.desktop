@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Web Browser
+Exec=firefox-esr
+Icon=firefox-esr
