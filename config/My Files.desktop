@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=My Files
+Exec=dolphin
+Icon=user-home

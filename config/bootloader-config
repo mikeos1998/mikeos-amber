@@ -1,0 +1,41 @@
+#!/bin/bash
+# Mike OS: Amber version of Debian's installer step "bootloader-config".
+# Debian's version downloads GRUB from a package repository on the USB stick, which this
+# image doesn't have. This one installs GRUB from packages saved inside the system image,
+# so installing works offline.
+
+CHROOT=${CALAMARES_TARGET:-$(mount | grep proc | grep calamares | awk '{print $3}' | sed -e "s#/proc##g")}
+DEBS=/var/cache/mikeos-amber/grub
+
+# Full-disk encryption: keep the initramfs private (the tools are already installed)
+if [ "$(mount | grep "$CHROOT " | cut -c -16)" = "/dev/mapper/luks" ]; then
+    echo "UMASK=0077" > "$CHROOT/etc/initramfs-tools/conf.d/initramfs-permissions"
+fi
+
+echo "Running bootloader-config..."
+if [ -d /sys/firmware/efi/efivars ]; then
+    pkg=grub-efi-amd64
+    echo " * Installing grub-efi (uefi)..."
+else
+    pkg=grub-pc
+    echo " * Installing grub (bios)..."
+fi
+
+if ls "$CHROOT$DEBS/$pkg/"*.deb >/dev/null 2>&1; then
+    DEBIAN_FRONTEND=noninteractive chroot "$CHROOT" sh -c "dpkg -i $DEBS/$pkg/*.deb"
+else
+    echo " * No saved $pkg package, trying the internet instead..."
+    DEBIAN_FRONTEND=noninteractive chroot "$CHROOT" apt-get -y install "$pkg"
+fi
+status=$?
+rm -rf "${CHROOT:?}$DEBS"
+if [ $status -ne 0 ]; then
+    echo "Could not install $pkg"
+    exit 1
+fi
+
+# Re-enable os-prober so other systems (like Windows) show up in the boot menu
+if [ -f "$CHROOT/etc/default/grub" ]; then
+    sed -i "s/#GRUB_DISABLE_OS_PROBER=false/# OS_PROBER re-enabled by the Mike OS installer:\nGRUB_DISABLE_OS_PROBER=false/g" "$CHROOT/etc/default/grub"
+fi
+chroot "$CHROOT" /usr/sbin/update-grub

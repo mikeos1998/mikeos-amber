@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Welcome Center
+Exec=python3 /usr/share/mikeos-amber/apps/welcome.py --autostart
+Icon=mikeos-amber
+OnlyShowIn=KDE;
+NoDisplay=true
+X-KDE-autostart-after=panel

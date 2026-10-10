@@ -1,0 +1,10 @@
+#!/bin/sh
+# Mike OS: Amber boot screen. If this fails the PC just boots with text instead.
+if command -v plymouth-set-default-theme >/dev/null 2>&1 \
+   && plymouth-set-default-theme mikeos-amber \
+   && update-initramfs -u -k all; then
+    echo "BOOTSPLASH: installed"
+else
+    echo "BOOTSPLASH: *** FAILED - booting will show text instead ***"
+fi
+exit 0

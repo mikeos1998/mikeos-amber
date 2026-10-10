@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Mike OS: Amber
+Description=Mike OS: Amber boot screen
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/mikeos-amber
+ScriptFile=/usr/share/plymouth/themes/mikeos-amber/mikeos-amber.script
