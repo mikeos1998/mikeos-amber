@@ -1,0 +1,34 @@
+name: Build Raspberry Pi image
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore: ["README.md"]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Mike OS Amber for Raspberry Pi
+        run: sudo bash pi/build-pi.sh
+
+      - name: Upload SD card image
+        uses: actions/upload-artifact@v4
+        with:
+          name: mikeos-amber-pi-image
+          path: out-pi/mikeos-amber-pi.img.xz
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pi-build-log
+          path: pi-build.log
+          if-no-files-found: ignore
