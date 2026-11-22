@@ -2,6 +2,7 @@
 # Builds the Mike OS: Amber ISO. Run as root on Debian 12 (GitHub does this for you).
 set -euo pipefail
 cd "$(dirname "$0")"
+echo "=== Building Mike OS: Amber build $(cat VERSION 2>/dev/null || echo unknown) ==="
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update

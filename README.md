@@ -33,3 +33,12 @@ Anything under `config/includes.chroot/` is copied onto the OS at the same path.
 ## Credits
 
 The panel theme and window borders are a recolored fork of [Reactionary](https://www.opencode.net/phob1an/reactionary) by phob1an (GPLv3). It is downloaded and recolored during the build.
+
+## Raspberry Pi version (Pi 3 / Pi 4, 64-bit)
+
+Built by the **Build Raspberry Pi image** workflow (its file is `pi/pi-workflow.yml`; on GitHub it lives at `.github/workflows/pi.yml`).
+Download **mikeos-amber-pi-image**, unzip it, and write `mikeos-amber-pi.img.xz` to an SD card (8 GB or bigger) with Raspberry Pi Imager:
+Choose OS > Use custom. When Imager asks about customising settings, choose **No**.
+
+It logs straight into the desktop. User `amber`, password `amber`. First boot takes a few minutes while it expands to fill the card.
+The Pi version leaves out LibreOffice and the hard-drive installer (the SD card is already the installed system).
