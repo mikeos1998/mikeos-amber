@@ -1,0 +1,26 @@
+#!/bin/sh
+# M.I.K.E: build the game from its source (shipped in /usr/src/mike-build) and install it.
+# If anything here fails, the ISO still builds - just without M.I.K.E.
+
+install_mike() {
+    set -e
+    BUILD_DEPS="build-essential libsdl2-dev libgl-dev"
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends $BUILD_DEPS
+    cd /usr/src/mike-build
+    make PREFIX=/usr
+    make PREFIX=/usr install
+    [ -x /usr/games/mike ] && [ -f /usr/share/mike/TITLE.WAV ]
+    cd /
+    apt-get purge -y --autoremove $BUILD_DEPS
+    apt-get clean
+}
+
+if ( install_mike ); then
+    echo "MIKE: installed"
+else
+    echo "MIKE: *** FAILED - the ISO will be built without M.I.K.E ***"
+fi
+rm -rf /usr/src/mike-build
+exit 0

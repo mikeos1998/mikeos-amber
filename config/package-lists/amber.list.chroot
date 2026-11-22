@@ -13,11 +13,13 @@ kcalc
 dolphin
 vlc
 vlc-plugin-fluidsynth
-fluid-soundfont-gm
+timgm6mb-soundfont
 firefox-esr
 # needed by Space Cadet Pinball (built in config/hooks/normal/0700-pinball.hook.chroot)
 libsdl2-2.0-0
 libsdl2-mixer-2.0-0
+# needed by M.I.K.E (built in config/hooks/normal/0710-mike.hook.chroot)
+libgl1
 
 # --- Bundled apps: office, paint, photos, PDF, archives, screenshots, system info ---
 libreoffice-writer
@@ -41,6 +43,17 @@ python3-pyqt5
 # --- Install to hard drive, boot screen ---
 calamares
 calamares-settings-debian
+# boot loader + disk encryption tools for the installer (works offline)
+grub-common
+grub2-common
+grub-pc-bin
+grub-efi-amd64-bin
+efibootmgr
+os-prober
+ucf
+cryptsetup
+cryptsetup-initramfs
+keyutils
 plymouth
 
 # --- System ---

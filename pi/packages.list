@@ -1,0 +1,46 @@
+# Mike OS: Amber for Raspberry Pi - software added on top of Raspberry Pi OS Lite.
+# Same as the PC version minus LibreOffice, the PC installer and PC hardware drivers.
+
+# --- Desktop: KDE Plasma 5 (X11) ---
+kde-plasma-desktop
+kwin-x11
+xserver-xorg
+sddm
+plasma-nm
+plasma-pa
+pipewire-audio
+oxygen-icon-theme
+oxygen-sounds
+plymouth
+
+# --- Apps ---
+kcalc
+dolphin
+vlc
+vlc-plugin-fluidsynth
+timgm6mb-soundfont
+firefox-esr
+kolourpaint
+gwenview
+okular
+ark
+kde-spectacle
+kinfocenter
+
+# --- Games ---
+kpat
+kmines
+libsdl2-2.0-0
+libsdl2-mixer-2.0-0
+libgl1
+
+# --- Mike OS apps (Snake, Welcome Center) ---
+python3-pyqt5
+
+# --- Memory: compressed RAM swap ---
+zram-tools
+
+# --- System ---
+sudo
+locales
+network-manager

@@ -1,0 +1,59 @@
+M.I.K.E - CONTROLS (PC)
+=======================
+
+1 PLAYER (and all the menus)
+----------------------------
+Move / menu up & down .... Arrow keys  or  W A S D
+Jump / select ............ Space
+Back ..................... X  or  Backspace
+Credits (on title) ....... C
+Pause .................... Enter
+Turn the camera .......... Q and E
+
+
+2 PLAYER RACE
+-------------
+                    PLAYER 1             PLAYER 2
+Move .............. W A S D              Arrow keys
+Jump .............. Z                    Space
+Back .............. X                    Backspace
+Pause ............. Tab                  Enter
+Turn the camera ... Q and E              ,  and  .
+
+On the character select screen, either player can press left/right to swap
+characters. Z or Tab (player 1), or Space or Enter (player 2) starts the race.
+
+
+LEVEL EDITOR (1 PLAYER > MY LEVELS)
+-----------------------------------
+Move the cursor .......... Arrow keys
+Place the piece .......... Space
+Erase .................... X
+Next piece ............... C
+Height down / up ......... Q and E
+Editor menu .............. Enter  (test play, save, clear, exit)
+
+
+M.I.K.E ON VMU (the pet window / PLAY IT HERE)
+----------------------------------------------
+Open / close the menu .... X (B)
+Scroll the menu .......... Up / Down
+Do it (A) ................ Space
+Save and close ........... Esc (pet window)  /  Enter (play it here)
+
+
+GAME CONTROLLERS (Xbox, PlayStation, etc.)
+------------------------------------------
+The 1st controller is player 1, the 2nd is player 2.
+Move .............. Left stick or d-pad
+Jump / select ..... A
+Back .............. B
+Credits ........... Y (on the title screen)
+Pause ............. Start
+Turn the camera ... Triggers or shoulder buttons
+
+
+WINDOW
+------
+F11 or Alt+Enter .. Fullscreen on/off
+Esc ............... Leave fullscreen

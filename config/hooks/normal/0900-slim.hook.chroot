@@ -1,0 +1,28 @@
+#!/bin/sh
+# Make the ISO smaller: remove things nobody needs on a live/installed English desktop.
+# Keeps: English translations and help, license (copyright) files, everything that runs.
+
+before=$(du -sm /usr 2>/dev/null | cut -f1)
+
+# Small MIDI soundfont instead of the 140 MB one (VLC + Pinball music still work)
+if [ -f /usr/share/sounds/sf2/TimGM6mb.sf2 ]; then
+    apt-get purge -y fluid-soundfont-gm fluid-soundfont-gs 2>/dev/null || true
+    [ -e /usr/share/sounds/sf2/FluidR3_GM.sf2 ] || ln -s TimGM6mb.sf2 /usr/share/sounds/sf2/FluidR3_GM.sf2
+fi
+
+# Translations for other languages
+find /usr/share/locale -mindepth 1 -maxdepth 1 -type d ! -name 'en*' -exec rm -rf {} + 2>/dev/null
+# Help pages for other languages (keep English / default "C")
+find /usr/share/help -mindepth 1 -maxdepth 1 -type d ! -name 'C' ! -name 'en*' -exec rm -rf {} + 2>/dev/null
+find /usr/share/doc/HTML -mindepth 1 -maxdepth 1 -type d ! -name 'en' -exec rm -rf {} + 2>/dev/null
+# Manual pages and package docs, keeping each package's license file and KDE's English help
+rm -rf /usr/share/man/* /usr/share/info/* 2>/dev/null
+find /usr/share/doc -mindepth 1 \( -path /usr/share/doc/HTML -o -path '/usr/share/doc/HTML/*' \) -prune -o \
+     ! -type d ! -name copyright -exec rm -f {} + 2>/dev/null
+find /usr/share/doc -mindepth 1 -type d -empty -delete 2>/dev/null
+# Package download leftovers
+apt-get clean
+
+after=$(du -sm /usr 2>/dev/null | cut -f1)
+echo "SLIM: /usr went from ${before} MB to ${after} MB"
+exit 0

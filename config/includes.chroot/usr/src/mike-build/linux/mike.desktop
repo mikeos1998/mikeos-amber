@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=M.I.K.E
+Comment=Multimedia Interactive Kinetic Element
+Exec=mike
+Icon=mike
+Terminal=false
+Categories=Game;ActionGame;

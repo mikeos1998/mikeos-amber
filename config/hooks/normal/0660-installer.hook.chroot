@@ -1,0 +1,17 @@
+#!/bin/sh
+# Save GRUB (and anything it still needs) inside the image so the installer can set up
+# booting offline, and swap in the Mike OS version of the installer's boot loader step.
+set -e
+D=/var/cache/mikeos-amber/grub
+rm -rf "$D"
+for pkg in grub-pc grub-efi-amd64; do
+    mkdir -p "$D/$pkg"
+    # exactly the packages "apt-get install $pkg" would add, in matching versions
+    need=$(apt-get -s -y install "$pkg" | awk '/^Inst /{print $2}')
+    [ -n "$need" ]
+    (cd "$D/$pkg" && apt-get download $need)
+    echo "INSTALLER: saved for $pkg: $need"
+done
+chown -R root:root "$D"
+install -m 755 /usr/share/mikeos-amber/installer/bootloader-config /usr/sbin/bootloader-config
+echo "INSTALLER: bootloader step replaced"

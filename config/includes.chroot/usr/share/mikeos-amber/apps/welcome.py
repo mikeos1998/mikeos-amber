@@ -91,6 +91,7 @@ def first(*cmds):
 
 
 GAMES = [
+    ("M.I.K.E", "mike", ["/usr/games/mike"]),
     ("Snake", "amber-snake", ["python3", "/usr/share/mikeos-amber/apps/snake.py"]),
     ("Space Cadet Pinball", "SpaceCadetPinball", ["/opt/SpaceCadetPinball/SpaceCadetPinball"]),
     ("Solitaire", "kpat", ["kpat"]),
@@ -229,7 +230,7 @@ class Welcome(QWidget):
              "Documents, pictures, music and USB drives.",
              lambda: launch(first(["dolphin"], ["xdg-open", os.path.expanduser("~")]))),
             (["applications-games", "input-gaming"], "Play Games",
-             "Snake, Space Cadet Pinball, Solitaire and more.", self.games_menu),
+             "M.I.K.E, Snake, Space Cadet Pinball and more.", self.games_menu),
             (["preferences-desktop", "systemsettings"], "Personalize",
              "Change the wallpaper, sounds, colors and more.",
              lambda: launch(first(["systemsettings5"], ["systemsettings"]))),
