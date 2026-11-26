@@ -1,7 +1,24 @@
 # Mike OS: Amber for Raspberry Pi - software added on top of Raspberry Pi OS Lite.
 # Same as the PC version minus LibreOffice, the PC installer and PC hardware drivers.
 
-# --- Desktop: KDE Plasma 5 (X11) ---
+# --- Desktop: Amber Lite (LXQt + Openbox) is the default on the Pi; KDE Plasma stays installed as a fallback ---
+lxqt-core
+openbox
+gvfs
+gvfs-daemons
+libglib2.0-bin
+# light apps used in Amber Lite (fast to open on a Pi)
+qterminal
+lximage-qt
+qpdfview
+featherpad
+lxqt-archiver
+screengrab
+speedcrunch
+epiphany-browser
+gstreamer1.0-plugins-good
+gstreamer1.0-libav
+dconf-gsettings-backend
 kde-plasma-desktop
 kwin-x11
 xserver-xorg
@@ -44,3 +61,4 @@ zram-tools
 sudo
 locales
 network-manager
+dnsmasq-base

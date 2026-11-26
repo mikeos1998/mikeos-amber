@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Create Your Account
+Exec=python3 /usr/share/mikeos-amber/apps/accounts.py --autostart
+Icon=mikeos-amber
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

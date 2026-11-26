@@ -1,0 +1,6 @@
+#!/bin/sh
+# Create Your Account + Save Changes to USB: switch on the startup check that shows the account list
+# when there's more than one account, and make sure the helper tools can run.
+chmod 755 /usr/share/mikeos-amber/bin/amber-create-user /usr/share/mikeos-amber/bin/amber-login-check \
+          /usr/share/mikeos-amber/bin/amber-usb-save
+systemctl enable amber-login-check.service

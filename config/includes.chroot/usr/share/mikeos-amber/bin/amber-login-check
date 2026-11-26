@@ -1,0 +1,26 @@
+#!/bin/sh
+# Mike OS: runs at startup, just before the sign-in screen.
+# Auto sign-in only happens while there's ONE personal account. With two or more (not counting
+# Guest), the sign-in screen shows everyone so you pick your own account.
+PASSWD=${AMBER_PASSWD:-/etc/passwd}
+REMEMBER=/var/lib/mikeos-amber/autologin-user
+GUEST=amber
+[ -f /var/lib/mikeos-amber/account-setup-done ] || exit 0       # first-time setup still runs on Amber
+
+# Guest (the amber account) never gets admin rights, even on a USB stick that saves changes
+rm -f /etc/sudoers.d/live /etc/polkit-1/localauthority/*/*live-config* /etc/polkit-1/rules.d/*live-config* 2>/dev/null
+
+people=$(awk -F: -v g="$GUEST" '$3>=1000 && $3<60000 && $1!=g && $7!~/(nologin|false)$/ {print $1}' "$PASSWD")
+count=$(printf '%s\n' "$people" | grep -c .)
+want=""
+if [ "$count" -eq 1 ] && [ -f "$REMEMBER" ]; then
+    u=$(cat "$REMEMBER")
+    [ "$u" = "$people" ] && want=$u
+fi
+
+for f in /etc/sddm.conf.d/*.conf /etc/sddm.conf; do
+    [ -f "$f" ] && grep -q '^\[Autologin\]' "$f" || continue
+    sed -i '/^User=/d' "$f"
+    [ -n "$want" ] && sed -i "s/^\[Autologin\]\$/[Autologin]\nUser=$want/" "$f"
+done
+exit 0

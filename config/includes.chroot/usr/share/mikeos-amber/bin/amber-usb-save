@@ -1,0 +1,97 @@
+#!/bin/bash
+# Mike OS: Amber - set up "save changes" on the USB stick Mike OS is running from.
+# Makes a new partition in the empty space after the Mike OS image, labelled "persistence",
+# with a persistence.conf of "/ union". After a restart, everything you do is kept on the stick.
+#
+#   amber-usb-save --check   tells you what it would do (no changes)
+#   amber-usb-save --setup   does it
+# Output lines: INFO:key=value, STATUS:text, OK:..., ERROR:text
+set -u
+MODE=${1:---check}
+MIN_MB=512
+
+say() { echo "$@"; }
+fail() { echo "ERROR:$*"; exit 1; }
+
+[ "$(id -u)" = 0 ] || fail "This needs administrator rights."
+
+# which partition did Mike OS start from?
+if [ -n "${AMBER_USB_DEV:-}" ]; then           # for testing
+    part=$AMBER_USB_DEV
+else
+    grep -qw "boot=live" /proc/cmdline || fail "Mike OS isn't running from a USB stick right now, so there's nothing to set up."
+    part=$(findmnt -no SOURCE /run/live/medium 2>/dev/null | head -1)
+fi
+[ -n "$part" ] && [ -b "$part" ] || fail "Couldn't find the USB stick Mike OS started from."
+case "$part" in /dev/sr*|/dev/cdrom*) fail "Mike OS is running from a CD or DVD, which can't save anything. Use a USB stick." ;; esac
+disk=$(lsblk -no PKNAME "$part" 2>/dev/null | head -1)
+[ -n "$disk" ] && disk=/dev/$disk || disk=$part           # the whole stick was written as one image
+[ -b "$disk" ] || fail "Couldn't find the USB stick Mike OS started from."
+
+model=$(lsblk -dno MODEL "$disk" 2>/dev/null | sed 's/ *$//')
+size=$(lsblk -dbno SIZE "$disk" 2>/dev/null)
+say "INFO:disk=$disk"
+say "INFO:name=${model:-USB stick}"
+say "INFO:size=$size"
+
+partx -a "$disk" >/dev/null 2>&1 || true          # make sure every partition on the stick is visible
+already=0
+for p in $(lsblk -lnpo NAME "$disk" 2>/dev/null | tail -n +2); do
+    [ "$(blkid -s LABEL -o value "$p" 2>/dev/null)" = persistence ] && already=1
+done
+if [ "$already" = 1 ]; then
+    say "INFO:already=1"
+    say "OK:already"
+    exit 0
+fi
+
+# biggest empty space on the stick (in 512-byte sectors)
+read -r fstart fend fsize < <(LC_ALL=C sfdisk -F "$disk" 2>/dev/null |
+    awk '/^ *[0-9]+ +[0-9]+ +[0-9]+( |$)/ {print $1, $2, $3}' | sort -k3 -n | tail -1)
+if [ -z "${fsize:-}" ]; then fsize=0; fi
+free_bytes=$(( fsize * 512 ))
+say "INFO:free=$free_bytes"
+[ "$free_bytes" -ge $(( MIN_MB * 1024 * 1024 )) ] ||
+    fail "There isn't enough empty space on this USB stick to save changes. Try a bigger USB stick."
+
+count=$(sfdisk -d "$disk" 2>/dev/null | grep -c '^/dev/')
+[ "$count" -lt 4 ] || [ "$(sfdisk -d "$disk" 2>/dev/null | grep -c 'label: gpt')" = 1 ] ||
+    fail "This USB stick has no room for another partition."
+
+[ "$MODE" = "--setup" ] || { say "OK:ready"; exit 0; }
+
+# ---- make it
+say "STATUS:Making space for your saved changes..."
+start=$(( (fstart + 2047) / 2048 * 2048 ))                 # line it up on a 1 MB boundary
+end=$fend
+[ $(( end - start )) -gt $(( MIN_MB * 2048 )) ] || fail "There isn't enough empty space on this USB stick."
+printf 'start=%s, size=%s, type=83\n' "$start" "$(( end - start + 1 ))" |
+    sfdisk --append --no-reread --force "$disk" >/tmp/amber-usb-save.log 2>&1 ||
+    fail "Couldn't add the save space: $(tail -2 /tmp/amber-usb-save.log | tr '\n' ' ')"
+# which partition number did it get? (the one that starts exactly where we asked)
+num=$(sfdisk -d "$disk" 2>/dev/null | grep -E "start= *$start," | head -1 | sed 's/ *:.*//' | grep -o '[0-9]*$')
+[ -n "$num" ] || fail "Couldn't find the new save space on the stick."
+partx -a --nr "$num" "$disk" >/dev/null 2>&1 || partx -u --nr "$num" "$disk" >/dev/null 2>&1 || true
+udevadm settle 2>/dev/null || true
+# safety: only ever format the partition that starts exactly where the new one was made
+new=""
+for i in $(seq 1 15); do
+    for p in $(lsblk -lnpo NAME "$disk" | tail -n +2); do
+        b=$(basename "$p")
+        if [ "$(cat /sys/class/block/$b/start 2>/dev/null)" = "$start" ] &&
+           [ "$(cat /sys/class/block/$b/partition 2>/dev/null)" = "$num" ]; then new=$p; break; fi
+    done
+    [ -n "$new" ] && [ -b "$new" ] && break
+    new=""; sleep 1
+done
+[ -n "$new" ] || fail "The save space was made, but Mike OS can't see it yet. Restart and run this again."
+[ "$(lsblk -no FSTYPE "$new" 2>/dev/null | tr -d ' ')" = "" ] || fail "Something is already on that part of the stick, so it was left alone."
+
+say "STATUS:Getting it ready (this can take a minute)..."
+mkfs.ext4 -F -q -L persistence "$new" >>/tmp/amber-usb-save.log 2>&1 || fail "Couldn't format the save space."
+mnt=$(mktemp -d)
+mount "$new" "$mnt" || fail "Couldn't open the save space."
+echo "/ union" > "$mnt/persistence.conf"
+sync
+umount "$mnt"; rmdir "$mnt"
+say "OK:done"

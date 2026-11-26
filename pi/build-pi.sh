@@ -141,10 +141,18 @@ done
 in_root useradd -m -s /bin/bash -c "Amber" -G "$groups" "$USERNAME"
 echo "$USERNAME:$PASSWORD" | in_root chpasswd
 mkdir -p "$ROOT/etc/sddm.conf.d"
-printf '[Autologin]\nUser=%s\nSession=plasma\n' "$USERNAME" > "$ROOT/etc/sddm.conf.d/10-mikeos-autologin.conf"
+printf '[Autologin]\nUser=%s\nSession=lxqt\n' "$USERNAME" > "$ROOT/etc/sddm.conf.d/10-mikeos-autologin.conf"   # Amber Lite
 in_root systemctl set-default graphical.target
 in_root systemctl enable sddm
 in_root systemctl mask userconfig.service >/dev/null 2>&1 || true   # skip the "create a user" console wizard
+
+# speed-ups for the Pi (same script you can run on an existing install)
+cp pi/amber-speedup.sh "$ROOT/tmp/amber-speedup.sh"
+in_root bash /tmp/amber-speedup.sh --build-time
+desktop_home=$(in_root getent passwd "$USERNAME" | cut -d: -f6)
+in_root sh /usr/share/mikeos-amber/lite/apply-user.sh /etc/skel
+in_root sh /usr/share/mikeos-amber/lite/apply-user.sh "$desktop_home"
+cp -a "$ROOT/etc/skel/.config/." "$ROOT$desktop_home/.config/" && in_root chown -R "$USERNAME:$USERNAME" "$desktop_home/.config"
 
 # quiet boot behind the boot screen
 CMD="$ROOT/boot/firmware/cmdline.txt"

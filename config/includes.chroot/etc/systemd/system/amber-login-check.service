@@ -1,0 +1,10 @@
+[Unit]
+Description=Mike OS: show the account list when there's more than one account
+Before=display-manager.service sddm.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/share/mikeos-amber/bin/amber-login-check
+
+[Install]
+WantedBy=multi-user.target

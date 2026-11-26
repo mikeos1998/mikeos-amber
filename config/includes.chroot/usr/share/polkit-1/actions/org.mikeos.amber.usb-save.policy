@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>Mike OS</vendor>
+  <!-- Only works while Mike OS is running from a USB stick (the helper checks), and it only ever adds a
+       partition in the empty space after Mike OS, so no password is needed. -->
+  <action id="org.mikeos.amber.usb-save">
+    <description>Save changes to USB</description>
+    <message>Mike OS wants to set up saving on this USB stick</message>
+    <icon_name>drive-removable-media</icon_name>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/share/mikeos-amber/bin/amber-usb-save</annotate>
+  </action>
+</policyconfig>

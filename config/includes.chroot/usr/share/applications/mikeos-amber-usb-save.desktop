@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Save Changes to USB
+Comment=Keep your stuff when Mike OS runs from a USB stick
+Exec=python3 /usr/share/mikeos-amber/apps/usbsave.py
+Icon=drive-removable-media
+Terminal=false
+Categories=System;Settings;
+Keywords=usb;persistence;save;live;

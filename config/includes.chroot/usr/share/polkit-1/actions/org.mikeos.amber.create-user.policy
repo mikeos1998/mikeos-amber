@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>Mike OS</vendor>
+  <!-- First-time setup only: the helper refuses to run again once your account exists,
+       so no password is needed for this one step (people may not know the Amber password). -->
+  <action id="org.mikeos.amber.create-user">
+    <description>Create your account</description>
+    <message>Mike OS wants to create your account</message>
+    <icon_name>mikeos-amber</icon_name>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/share/mikeos-amber/bin/amber-create-user</annotate>
+  </action>
+</policyconfig>
